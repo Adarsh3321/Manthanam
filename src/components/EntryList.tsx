@@ -42,7 +42,7 @@ export default function EntryList({ entries }: EntryListProps) {
   const getStressColor = (score?: number) => {
     if (!score) return 'text-slate-500';
     if (score < 30) return 'text-emerald-400';
-    if (score < 60) return 'text-yellow-400';
+    if (score < 60) return 'text-amber-400';
     return 'text-rose-400';
   };
 
@@ -56,7 +56,7 @@ export default function EntryList({ entries }: EntryListProps) {
           <div className="flex flex-col md:flex-row md:items-baseline justify-between mb-4 gap-2 relative z-10">
             <div className="flex items-center gap-4 flex-wrap">
               <div className="flex items-center gap-2 text-slate-500">
-                <Calendar className="w-4 h-4 text-indigo-500/50" />
+                <Calendar className="w-4 h-4 text-amber-500/50" />
                 <span className="text-sm font-bold tracking-widest uppercase">{formatDate(entry.created_at)}</span>
               </div>
               {entry.emotion && (
@@ -88,7 +88,7 @@ export default function EntryList({ entries }: EntryListProps) {
             </div>
           </div>
 
-          <p className="text-slate-200 text-xl md:text-2xl leading-relaxed mb-6 whitespace-pre-wrap relative z-10 font-light">
+          <p className="text-slate-300 text-base md:text-lg leading-relaxed mb-6 whitespace-pre-wrap relative z-10 font-light">
             {entry.entry_text}
           </p>
 
@@ -96,8 +96,8 @@ export default function EntryList({ entries }: EntryListProps) {
             {entry.ai_summary && (
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
-                  <BrainCircuit className="w-4 h-4 text-indigo-500" />
-                  <h4 className="text-xs font-bold text-indigo-500 uppercase tracking-widest">AI Analysis</h4>
+                  <BrainCircuit className="w-4 h-4 text-amber-500" />
+                  <h4 className="text-xs font-bold text-amber-500 uppercase tracking-widest">AI Analysis</h4>
                 </div>
                 <p className="text-sm text-slate-400 leading-relaxed max-w-prose">
                   {entry.ai_summary}
