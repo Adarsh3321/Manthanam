@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 
-const apiKey = "AIzaSyCVAHjKXd1ImNkOZl4nkU_ZH00jbvT5sT0"; // from .env
+const apiKey = "VITE_GEMINI_API_KEY"; // from .env
 const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
 
