@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase, JournalEntry } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { X, Save, Sparkles } from 'lucide-react';
+import { X, Save, Sparkles, BrainCircuit } from 'lucide-react';
 import { analyzeSentiment } from '../utils/sentiment';
 
 type NewEntryProps = {
@@ -14,6 +14,14 @@ export default function NewEntry({ onSave, onCancel }: NewEntryProps) {
   const [entryText, setEntryText] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    // Auto-focus and resize text area
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, []);
 
   const handleSave = async () => {
     if (!entryText.trim()) {
@@ -41,6 +49,8 @@ export default function NewEntry({ onSave, onCancel }: NewEntryProps) {
             sentiment: analysis.sentiment,
             emotion: analysis.emotion,
             stress_score: analysis.stressScore,
+            confidence: analysis.confidence,
+            risk_level: analysis.riskLevel,
             ai_summary: analysis.summary,
             ai_affirmation: analysis.affirmation,
           },
@@ -58,85 +68,69 @@ export default function NewEntry({ onSave, onCancel }: NewEntryProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-4">
-      <div className="max-w-3xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
-          <div className="bg-gradient-to-r from-blue-500 to-green-500 p-6 text-white">
-            <div className="flex justify-between items-center">
-              <div>
-                <h2 className="text-2xl font-bold mb-1">New Entry</h2>
-                <p className="text-blue-100 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4" />
-                  Express yourself freely
-                </p>
-              </div>
-              <button
-                onClick={onCancel}
-                className="p-2 hover:bg-white/20 rounded-lg transition-all"
-              >
-                <X className="w-6 h-6" />
-              </button>
+    <div className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-3xl overflow-y-auto animate-fade-in flex items-center justify-center p-4 sm:p-6 md:p-12">
+      <div className="w-full max-w-4xl glass-panel rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(79,70,229,0.15)] flex flex-col max-h-full">
+        {/* Header */}
+        <div className="flex justify-between items-center p-6 md:p-8 border-b border-white/5">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-indigo-500/20 rounded-2xl flex items-center justify-center border border-indigo-500/30">
+              <Sparkles className="w-6 h-6 text-indigo-400" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-display font-bold text-white">How are you feeling?</h2>
+              <p className="text-sm text-slate-400 mt-1">Express yourself freely. AI will analyze this safely.</p>
             </div>
           </div>
+          <button
+            onClick={onCancel}
+            disabled={saving}
+            className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl transition-all duration-300 disabled:opacity-50"
+          >
+            <X className="w-6 h-6 text-slate-400 hover:text-white transition-colors" />
+          </button>
+        </div>
 
-          <div className="p-6">
-            <div className="mb-6">
-              <label htmlFor="entry" className="block text-sm font-medium text-gray-700 mb-2">
-                How are you feeling today?
-              </label>
-              <textarea
-                id="entry"
-                value={entryText}
-                onChange={(e) => setEntryText(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none"
-                rows={12}
-                placeholder="Write about your day, your thoughts, or how you're feeling... There's no right or wrong way to express yourself here."
-                autoFocus
-              />
-              <div className="mt-2 text-sm text-gray-500">
-                {entryText.length} characters
-              </div>
-            </div>
+        {/* Body */}
+        <div className="p-6 md:p-8 flex-1 flex flex-col min-h-[40vh]">
+          <textarea
+            ref={textareaRef}
+            value={entryText}
+            onChange={(e) => setEntryText(e.target.value)}
+            disabled={saving}
+            className="flex-1 w-full bg-transparent text-xl md:text-2xl font-light leading-relaxed text-slate-200 placeholder:text-slate-700 outline-none resize-none disabled:opacity-50"
+            placeholder="Start typing your thoughts..."
+          />
+          
+          <div className="mt-4 flex justify-between items-center text-sm font-medium">
+            <span className="text-slate-600">{entryText.length} chars</span>
+            {error && <span className="text-rose-500 animate-pulse">{error}</span>}
+          </div>
+        </div>
 
-            {error && (
-              <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                {error}
-              </div>
+        {/* Footer */}
+        <div className="p-6 md:p-8 border-t border-white/5 bg-slate-900/50 flex flex-col sm:flex-row justify-between items-center gap-6">
+          <div className="flex items-center gap-3 text-sm text-slate-500 max-w-sm">
+            <BrainCircuit className="w-8 h-8 text-indigo-500/50" />
+            <p>MoodMuse uses private AI to understand your emotional patterns. Your entries remain fully encrypted.</p>
+          </div>
+          
+          <button
+            onClick={handleSave}
+            disabled={saving || !entryText.trim()}
+            className="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-4 bg-white text-slate-950 rounded-2xl font-bold text-lg hover:scale-105 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.2)] disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed group"
+          >
+            {saving ? (
+              <>
+                <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin"></div>
+                Analyzing...
+              </>
+            ) : (
+              <>
+                Save Entry
+                <Save className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </>
             )}
-
-            <div className="flex gap-3">
-              <button
-                onClick={handleSave}
-                disabled={saving || !entryText.trim()}
-                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-green-500 text-white rounded-lg font-medium hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {saving ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Analyzing your emotions...
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-5 h-5" />
-                    Save Entry
-                  </>
-                )}
-              </button>
-              <button
-                onClick={onCancel}
-                disabled={saving}
-                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-all disabled:opacity-50"
-              >
-                Cancel
-              </button>
-            </div>
-
-            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-800">
-                <strong>Your privacy matters:</strong> Your entries are private and secure. We use AI to analyze sentiment and provide insights, but your data stays with you.
-              </p>
-            </div>
-          </div>
+          </button>
         </div>
       </div>
     </div>

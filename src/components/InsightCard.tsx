@@ -6,19 +6,18 @@ type InsightCardProps = {
   value: string;
   color: string;
   description: string;
+  className?: string;
 };
 
-export default function InsightCard({ icon: Icon, title, value, color, description }: InsightCardProps) {
+export default function InsightCard({ icon: Icon, title, value, color, description, className = '' }: InsightCardProps) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all">
-      <div className="flex items-start justify-between mb-4">
-        <div className={`w-12 h-12 bg-gradient-to-br ${color} rounded-xl flex items-center justify-center`}>
-          <Icon className="w-6 h-6 text-white" />
-        </div>
+    <div className={`flex flex-col justify-center py-4 ${className}`}>
+      <div className="flex items-center gap-3 mb-3">
+        <Icon className="w-5 h-5 text-slate-500" />
+        <p className="text-xs font-bold tracking-[0.2em] text-slate-500 uppercase">{title}</p>
       </div>
-      <h3 className="text-sm font-medium text-gray-600 mb-1">{title}</h3>
-      <p className="text-3xl font-bold text-gray-900 mb-1 capitalize">{value}</p>
-      <p className="text-xs text-gray-500">{description}</p>
+      <h3 className="text-4xl md:text-5xl font-display font-bold text-white tracking-tighter capitalize mb-2">{value}</h3>
+      <p className="text-sm text-slate-400 font-medium">{description}</p>
     </div>
   );
 }
