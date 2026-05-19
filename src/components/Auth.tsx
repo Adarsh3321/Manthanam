@@ -157,7 +157,7 @@ export default function Auth() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-slate-950 py-4 rounded-xl font-bold text-lg hover:shadow-lg hover:shadow-orange-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 mt-4"
+              className="w-full bg-orange-500/[0.06] backdrop-blur-xl border border-amber-500/[0.15] text-amber-400 py-4 rounded-xl font-bold text-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 mt-4 hover:bg-gradient-to-r hover:from-orange-500 hover:to-amber-500 hover:text-slate-950 hover:border-transparent hover:shadow-[0_8_32_0_rgba(249,115,22,0.2)]"
             >
               {loading ? (
                 <div className="flex items-center justify-center gap-2">

@@ -156,7 +156,7 @@ export default function Dashboard() {
                <div className="relative z-10">
                  <button
                    onClick={() => setShowNewEntry(true)}
-                   className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-orange-500 to-amber-500 text-slate-950 rounded-full font-bold text-lg hover:scale-105 transition-all duration-300 shadow-[0_0_40px_rgba(249,115,22,0.2)]"
+                   className="inline-flex items-center gap-3 px-8 py-4 bg-orange-500/[0.06] backdrop-blur-xl border border-amber-500/[0.15] text-amber-400 rounded-full font-bold text-lg hover:scale-105 transition-all duration-300 hover:bg-gradient-to-r hover:from-orange-500 hover:to-amber-500 hover:text-slate-950 hover:border-transparent hover:shadow-[0_8_32_0_rgba(249,115,22,0.2)]"
                  >
                    <PenLine className="w-5 h-5" />
                    Write Vichar (विचार)
